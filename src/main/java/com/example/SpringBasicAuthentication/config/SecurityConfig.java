@@ -25,6 +25,7 @@ public class SecurityConfig {
 
 
     private final UserService userService;
+    private final BasicAuthenticationEntryPoint basicAuthenticationEntryPoint;
 
     @Bean
     public UserDetailsService userDetailsService(){
@@ -34,6 +35,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(req->req.requestMatchers("api/v1/auth/**").permitAll().anyRequest().authenticated())
+                .exceptionHandling(ex->ex.authenticationEntryPoint(basicAuthenticationEntryPoint))
                 .httpBasic(Customizer.withDefaults())
                 .build();
     }
